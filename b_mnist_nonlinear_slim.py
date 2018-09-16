@@ -225,7 +225,6 @@ for epoch in range(training_epochs):
         time_list.append(time.time()-start)
         all_ = [COUNT,COST,TIME,COST_TEST,COST_VALID,epoch_list,time_list,evidence_r]
         cPickle.dump(all_, open(directory+EXPERIMENT, 'wb'))
-
 print(EXPERIMENT)
 
 
