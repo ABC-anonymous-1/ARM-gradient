@@ -257,10 +257,7 @@ evidence_r = []
 
 for epoch in range(training_epochs):
     
-    record = [];
-    
-    #lrtr = np_lr/(1+epoch/training_epochs*9)
-    
+    record = []    
     for i in range(total_batch):
         train_xs = train_data.next_batch(batch_size)  
         _,cost = sess.run([train_op,gen_loss],{x:train_xs,lr:np_lr})
@@ -281,11 +278,7 @@ for epoch in range(training_epochs):
         epoch_list.append(epoch)
         time_list.append(time.time()-start)
         all_ = [COUNT,COST,TIME,COST_TEST,COST_VALID,epoch_list,time_list,evidence_r]
-        cPickle.dump(all_, open(directory+EXPERIMENT, 'wb'))
-            
-avg_evi_test = evidence(sess, test_data, -neg_elbo, batch_size, S = 1000)
-print("The final test NLL is", -np.round(avg_evi_test,2))
-cPickle.dump([np_lr] + all_ + [avg_evi_test], open(directory+EXPERIMENT, 'wb'))
+        cPickle.dump(all_, open(directory+EXPERIMENT, 'wb'))           
 
 print(EXPERIMENT)
 
