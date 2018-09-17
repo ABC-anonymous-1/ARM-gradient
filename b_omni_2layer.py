@@ -25,13 +25,7 @@ Bernoulli = tf.contrib.distributions.Bernoulli
 def bernoulli_loglikelihood(b, log_alpha):
     return b * (-tf.nn.softplus(-log_alpha)) + (1 - b) * (-log_alpha - tf.nn.softplus(-log_alpha))
 
-def lrelu(x, alpha=0.2):
-  return tf.nn.relu(x) - alpha * tf.nn.relu(-x)
-
-
-
 def encoder1(x,bi_dim,reuse=False):
-    #return logits #Eric Jang uses [512,256]
     with tf.variable_scope("encoder") as scope:
         if reuse:
             scope.reuse_variables()
@@ -40,7 +34,6 @@ def encoder1(x,bi_dim,reuse=False):
     return log_alpha1
 
 def encoder2(b1,bi_dim,reuse=False):
-    #return logits #Eric Jang uses [512,256]
     with tf.variable_scope("encoder") as scope:
         if reuse:
             scope.reuse_variables()
@@ -247,7 +240,6 @@ alpha_grads = tf.concat([alpha1_grads,alpha2_grads],axis=1)
 inf_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='encoder')
 log_alpha_b = tf.concat([log_alpha_b1,log_alpha_b2],axis=1)
 #log_alpha_b is N*d_b, alpha_grads is N*d_b, inf_vars is d_theta
-#d_theta; should be devided by batch-size, but can be absorbed into learning rate
 inf_grads = tf.gradients(log_alpha_b, inf_vars, grad_ys=alpha_grads)#/b_s
 inf_gradvars = zip(inf_grads, inf_vars)
 inf_opt = tf.train.AdamOptimizer(lr)
