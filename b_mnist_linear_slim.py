@@ -24,9 +24,6 @@ Bernoulli = tf.contrib.distributions.Bernoulli
 def bernoulli_loglikelihood(b, log_alpha):
     return b * (-tf.nn.softplus(-log_alpha)) + (1 - b) * (-log_alpha - tf.nn.softplus(-log_alpha))
 
-def lrelu(x, alpha=0.2):
-    return tf.nn.relu(x) - alpha * tf.nn.relu(-x)
-
 
 
 def encoder(x,b_dim,reuse=False):
