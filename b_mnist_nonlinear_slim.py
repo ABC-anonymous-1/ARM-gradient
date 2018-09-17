@@ -198,32 +198,29 @@ step = 0
 
 import time
 start = time.time()
-COUNT=[]; COST=[]; TIME=[];COST_TEST=[];COST_VALID=[];epoch_list=[];time_list=[]
-evidence_r = [];
-all_ = []
-for epoch in range(training_epochs):
-    record=[]
+COUNT=[]; epoch_list=[];time_list=[]
+evidence_r = []
 
+for epoch in range(training_epochs):
+    
+    record = []    
     for i in range(total_batch):
         train_xs = train_data.next_batch(batch_size)  
         _,cost = sess.run([train_op,gen_loss],{x:train_xs,lr:np_lr})
         record.append(cost)
         step += 1
+    
     print(epoch,'cost=',np.mean(record),'with std=',np.std(record))
+    
     if epoch%1 == 0:
-        COUNT.append(step); COST.append(np.mean(record)); TIME.append(time.time()-start)
-        COST_VALID.append(get_loss(sess,valid_data,total_valid_batch))
-        
+        COUNT.append(step);  TIME.append(time.time()-start)
     if epoch%5 == 0:
         avg_evi_val = evidence(sess, valid_data, -neg_elbo, batch_size, S = 100, total_batch=10)
         print(epoch,'The validation NLL is', -np.round(avg_evi_val,2))
-        evidence_r.append(np.round(avg_evi_val,2))
+        evidence_r.append(np.round(avg_evi_val,2))        
         
-        COST_TEST.append(get_loss(sess,test_data,total_test_batch))  
-        epoch_list.append(epoch)
-        time_list.append(time.time()-start)
-        all_ = [COUNT,COST,TIME,COST_TEST,COST_VALID,epoch_list,time_list,evidence_r]
-        cPickle.dump(all_, open(directory+EXPERIMENT, 'wb'))
+        all_ = [COUNT,TIME,evidence_r]
+        cPickle.dump(all_, open(directory+EXPERIMENT, 'wb'))  
 print(EXPERIMENT)
 
 
