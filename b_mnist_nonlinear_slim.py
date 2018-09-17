@@ -215,6 +215,7 @@ for epoch in range(training_epochs):
     if epoch%1 == 0:
         COUNT.append(step);  TIME.append(time.time()-start)
     if epoch%5 == 0:
+        
         avg_evi_val = evidence(sess, valid_data, -neg_elbo, batch_size, S = 100, total_batch=10)
         print(epoch,'The validation NLL is', -np.round(avg_evi_val,2))
         evidence_r.append(np.round(avg_evi_val,2))        
