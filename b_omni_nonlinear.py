@@ -34,8 +34,6 @@ def encoder(x,b_dim,reuse=False):
         if reuse:
             scope.reuse_variables()
         h2 = slim.stack(x, slim.fully_connected,[200,200],activation_fn=lrelu)
-#        h1 = tf.layers.dense(2. * x - 1., 200, tf.nn.relu, name="encoder_1")
-#        h2 = tf.layers.dense(h1, 200, tf.nn.relu, name="encoder_2")
         log_alpha = tf.layers.dense(h2, b_dim, activation=None)
     return log_alpha
 
@@ -45,8 +43,6 @@ def decoder(b,x_dim,reuse=False):
         if reuse:
             scope.reuse_variables()
         h2 = slim.stack(b ,slim.fully_connected,[200,200],activation_fn=lrelu)
-        #h1 = tf.layers.dense(2. * b - 1., 200, tf.nn.relu, name="decoder_1")
-        #h2 = tf.layers.dense(h1, 200, tf.nn.relu, name="decoder_2")
         log_alpha = tf.layers.dense(h2, x_dim, activation=None)
     return log_alpha
 
@@ -188,7 +184,6 @@ alpha_grads = tf.expand_dims(F1-F2,axis=2)*(u_noise-0.5) #N*K_u*d_b
 alpha_grads = tf.reduce_mean(alpha_grads,axis=1) #N*d_b, expectation over u
 inf_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='encoder')
 #log_alpha_b is N*d_b, alpha_grads is N*d_b, inf_vars is d_theta
-#d_theta; should be devided by batch-size, but can be absorbed into learning rate
 inf_grads = tf.gradients(log_alpha_b, inf_vars, grad_ys=alpha_grads)#/b_s
 inf_gradvars = zip(inf_grads, inf_vars)
 inf_opt = tf.train.AdamOptimizer(lr,beta1=0.5,beta2=.99999)
@@ -196,9 +191,6 @@ inf_train_op = inf_opt.apply_gradients(inf_gradvars)
 
 prior_train_op = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(gen_loss,var_list=[prior_logit0])
 
-
-
-#with tf.control_dependencies([gen_train_op, inf_train_op,prior_train_op]):
 with tf.control_dependencies([gen_train_op, inf_train_op, prior_train_op]):
     train_op = tf.no_op()
     
