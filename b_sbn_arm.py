@@ -1,5 +1,3 @@
-#This code can only train with M==1, because when M=1, lower bound and the true object are same
-#from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
@@ -277,19 +275,8 @@ for epoch in range(training_epochs):
         epoch_list.append(epoch)
         time_list.append(time.time()-start)
         print(epoch,'test_loss=',test_loss)
-        all_ = [COUNT,COST,TIME,COST_TEST,COST_VALID,epoch_list,time_list]
-        pickle.dump(all_, open(directory+EXPERIMENT, 'wb'))
-        
-        #x_re = sess.run(x_recon,{x_u:x_upper,M:1000})
-        #fig_gnrt(x_re,epoch,bny=0)
-    record=[]
 
-path = os.getcwd()+'/sbnout/'
-if not os.path.exists(path):
-    os.makedirs(path)
-for i in range(20):
-    x_re = sess.run(x_recon,{x_u:x_upper,M:1})
-    fig_gnrt(x_re,epoch,bny=1,name_fig=path+'final_'+str(i))
+    record=[]
 
 test_loss = get_loss(sess,test_data,total_test_batch,M0=1000)
 print(epoch,'test_loss=',test_loss)
