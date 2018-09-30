@@ -198,7 +198,7 @@ step = 0
 
 import time
 start = time.time()
-COUNT=[]; epoch_list=[];time_list=[]
+COUNT=[]; epoch_list=[]; TIME=[]
 evidence_r = []
 
 for epoch in range(training_epochs):
